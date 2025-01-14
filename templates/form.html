@@ -16,6 +16,20 @@
         <h2>Rubik Queue Calculator</h2>
     </header>
     <div class="container">
+        <div class="case-description">
+            <h3>Studi Kasus: Tes Rubik di Pameran</h3>
+            <p>
+                Bayangkan sebuah pameran yang hanya berlangsung jika ada lahan kosong dan terbatas waktunya. Di dalam pameran ini, terdapat sebuah stand Rubik yang menyediakan tes dengan Rubik terbaru secara gratis untuk para pengunjung. 
+            </p>
+            <p>
+                Stand ini hanya dikelola oleh satu orang yang bertugas mengelola tes. Jumlah pengunjung yang datang ke stand tersebut dan waktu yang diperlukan untuk menyelesaikan setiap tes tergantung pada dua faktor: <em>Arrival Rate</em> (laaju kedatangan pengunjung) dan <em>Service Rate</em> (laaju pelayanan, yaitu berapa banyak tes yang bisa diselesaikan per unit waktu).
+            </p>
+            <p>
+                Dalam model antrian ini, <em>Arrival Rate (λ)</em> menggambarkan jumlah pengunjung yang datang ke stand Rubik per menit, dan <em>Service Rate (μ)</em> menggambarkan jumlah pengunjung yang dapat dilayani atau diselesaikan tesnya per menit. Anda dapat mengatur kedua nilai ini sesuai dengan keinginan, coba saja dengan nilai Arrival Rate 3 pengunjung per menit dan Service Rate 4 tes per menit.
+            </p>
+            <p><em>Note:</em> Untuk menjaga agar sistem tetap stabil, pastikan bahwa <strong>Service Rate (μ) lebih besar dari Arrival Rate (λ). Jika Service Rate (μ)sama dengan atau lebih kecil dari Arrival Rate (λ), antrian akan terus meningkat tanpa batas.</strong></p>
+        </div>
+
         <form method="post">
             <label for="arrival_rate">Arrival Rate of Participants (λ):</label>
             <input type="text" id="arrival_rate" name="arrival_rate" placeholder="e.g., 3 (participants/min)" required><br>
@@ -53,10 +67,31 @@
                     <p>Average Time: \( {{ result.formulas.avg_time }} \)</p>
                     <p>Queue Participants: \( {{ result.formulas.avg_queue_customers }} \)</p>
                     <p>Queue Time: \( {{ result.formulas.avg_queue_time }} \)</p>
-                {% endif %}
-            </div>
-        {% endif %}
-    </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+                  <!-- Kesimpulan -->
+                  <h4>Kesimpulan</h4>
+                  <p>
+                      {% if result.utilization < 1 %}
+                          Sistem antrian ini stabil, karena tingkat pemanfaatan (ρ) = {{ result.utilization }} yang lebih kecil dari 1.
+                          Dengan demikian, stand Rubik dapat menangani pengunjung dengan baik tanpa terjadi penumpukan antrian yang berlebihan.
+                      {% else %}
+                          Sistem antrian ini tidak stabil, karena tingkat pemanfaatan (ρ) = {{ result.utilization }} yang lebih besar atau sama dengan 1,
+                          yang menunjukkan bahwa antrian akan terus meningkat dan mungkin akan terjadi penumpukan pengunjung.
+                      {% endif %}
+                  </p>
+
+                  <!-- Penjelasan Output -->
+                  <h4>Penjelasan Output</h4>
+                  <p><strong>Utilization (ρ):</strong> Nilai ρ = {{ result.utilization }} berarti sistem menggunakan {{ result.utilization * 100 }}% dari kapasitasnya.</p>
+                  <p><strong>Average Number of Participants (L):</strong> Nilai L = {{ result.avg_customers }} berarti rata-rata ada {{ result.avg_customers }} pengunjung di sistem, baik yang sedang dilayani maupun yang menunggu di antrian.</p>
+                  <p><strong>Average Time Spent in System (W):</strong> Nilai W = {{ result.avg_time }} berarti rata-rata pengunjung menghabiskan waktu {{ result.avg_time }} menit atau {{ result.avg_time * 60 }} detik di stand Rubik, termasuk waktu menunggu dan dilayani.</p>
+                  <p><strong>Participants in Queue (LQ):</strong> Nilai LQ = {{ result.avg_queue_customers }} berarti ada rata-rata {{ result.avg_queue_customers }} pengunjung yang sedang menunggu giliran untuk dilayani.</p>
+                  <p><strong>Time in Queue (WQ):</strong> Nilai WQ = {{ result.avg_queue_time }} berarti rata-rata pengunjung menghabiskan waktu {{ result.avg_queue_time }} menit atau {{ result.avg_queue_time * 60 }} detik dalam antrian sebelum dilayani.</p>
+              {% endif %}
+          </div>
+      {% endif %}
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
