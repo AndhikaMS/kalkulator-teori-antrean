@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubik Queue Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <!-- Add MathJax for rendering LaTeX formulas -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <header>
+        <h2>Rubik Queue Calculator</h2>
+    </header>
+    <div class="container">
+        <form method="post">
+            <label for="arrival_rate">Arrival Rate of Participants (λ):</label>
+            <input type="text" id="arrival_rate" name="arrival_rate" placeholder="e.g., 3 (participants/min)" required><br>
+
+            <label for="service_rate">Service Rate per Participant (μ):</label>
+            <input type="text" id="service_rate" name="service_rate" placeholder="e.g., 4 (participants/min)" required><br>
+
+            <button type="submit">Calculate</button>
+        </form>
+
+        {% if result %}
+            <div class="result">
+                <h3>M/M/1 Results</h3>
+                {% if result.error %}
+                    <p class="error">{{ result.error }}</p>
+                {% else %}
+                    <label for="utilization">Utilization (ρ):</label>
+                    <input type="text" id="utilization" value="{{ result.utilization }}" readonly><br>
+
+                    <label for="avg_customers">Average Number of Participants (L):</label>
+                    <input type="text" id="avg_customers" value="{{ result.avg_customers }}" readonly><br>
+
+                    <label for="avg_time">Average Time Spent in System (W):</label>
+                    <input type="text" id="avg_time" value="{{ result.avg_time }}" readonly><br>
+
+                    <label for="avg_queue_customers">Participants in Queue (LQ):</label>
+                    <input type="text" id="avg_queue_customers" value="{{ result.avg_queue_customers }}" readonly><br>
+
+                    <label for="avg_queue_time">Time in Queue (WQ):</label>
+                    <input type="text" id="avg_queue_time" value="{{ result.avg_queue_time }}" readonly><br>
+
+                    <h4>Formulas:</h4>
+                    <p>Utilization: \( {{ result.formulas.utilization }} \)</p>
+                    <p>Average Participants: \( {{ result.formulas.avg_customers }} \)</p>
+                    <p>Average Time: \( {{ result.formulas.avg_time }} \)</p>
+                    <p>Queue Participants: \( {{ result.formulas.avg_queue_customers }} \)</p>
+                    <p>Queue Time: \( {{ result.formulas.avg_queue_time }} \)</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
